@@ -1,0 +1,1 @@
+This repeatability package reproduces the results in Table 1 as well as Figure 2, Figure 3, and Figure 4, where the data for the table is stored in .csv files in the ``/results/`` directory. Moreover, we provide the implementation that we used to perform the experiments on the F1tenth car in the directory ``/code/control/``.

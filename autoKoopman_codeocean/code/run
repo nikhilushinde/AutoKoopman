@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -ex
+
+# reproduce results for the symbolic models in Table 1
+python3 experimentsSymbolic.py
+
+# reproduce results for the black-box models in Table 1
+python3 experimentsBlackBox.py
+
+# reproduce results for real data in Table 1
+python3 experimentsRealData.py
+
+# generate Figure 2
+python3 figureSpringPendulum.py
+
+# generate Figure 3
+python3 figureLearningCurve.py
+
+# generate Figure 4
+python3 figureElectricCircuit.py

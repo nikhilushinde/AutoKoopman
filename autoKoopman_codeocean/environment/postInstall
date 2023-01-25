@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -e
+
+# download AutoKoopman package
+wget "https://github.com/EthanJamesLew/AutoKoopman/archive/refs/heads/main.zip"
+unzip main -d AutoKoopman
+
+# install AutoKoopman package
+cd AutoKoopman
+cd AutoKoopman-main
+pip install .

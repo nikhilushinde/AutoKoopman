@@ -1,0 +1,40 @@
+metadata_version: 1
+name: 'AutoKoopman: A Toolbox for Automated System Identification via Koopman Operator
+  Linearization'
+description: While Koopman operator linearization has brought many advances for prediction,
+  control, and verification of dynamical systems, its main disadvantage is that the
+  quality of the resulting model heavily depends on the correct tuning of hyper-parameters
+  such as the number of observables. Our AutoKoopman toolbox is a Python package that
+  automates learning accurate models in a Koopman linearized representation at low
+  effort, offering several tuning strategies to optimize the hyper-parameters associated
+  with the Koopman operator techniques automatically.  AutoKoopman supports discrete
+  as well as continuous-time models and implements all major types of observables,
+  which are polynomials, random Fourier features, and neural networks. As we demonstrate
+  on several benchmarks, our toolbox is able to automatically identify very accurate
+  dynamic models for symbolic, black-box, as well as real systems.
+tags:
+- system identification
+- Koopman Operator
+- Random Fourier Features
+authors:
+- name: Ethan Lew
+  affiliations:
+  - name: Galois Inc.
+- name: Abdelrahman Waleed Elsayed Aly Hekal
+  affiliations:
+  - name: Newcastle University
+- name: Kostiantyn Potomkin
+  affiliations:
+  - name: Newcastle University
+- name: Niklas Kochdumper
+  affiliations:
+  - name: Stony Brook University, The State University of New York
+- name: Brandon Hencey
+  affiliations:
+  - name: Air Force Research Laboritory
+- name: Stanley Bak
+  affiliations:
+  - name: Stony Brook University, The State University of New York
+- name: Sergiy Bogomolov
+  affiliations:
+  - name: Newcastle University
