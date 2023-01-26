@@ -198,14 +198,14 @@ def plot_trajectory(bench, var_1=0, var_2=-1, seed=100):
 if __name__ == '__main__':
     all_matrices = {}
 
-    save = True
+    save = False
 
     benches = [pendulum.PendulumWithInput(beta=0.05), spring.Spring(), fhn.FitzHughNagumo(), robe21.RobBench(), prde20.ProdDestr(), lalo20.LaubLoomis(), bio2.Bio2(), trn_constants.TRNConstants()]
     obs_types = ['id', 'poly', 'rff']#['id', 'poly', 'rff', 'deep']
     if save: 
         store_data_heads(["", ""] + ["euc_norm", "time(s)", ""] * len(obs_types))
-        save_filename = "../results/experimentsSymbolic_model_results.pickle"
-        # save_filename = "../results/TESTS.pickle"
+        # save_filename = "../results/experimentsSymbolic_model_results.pickle"
+        save_filename = "../results/TESTS.pickle"
 
     for benchmark in benches:
         result = [benchmark.name, ""]
@@ -246,10 +246,7 @@ if __name__ == '__main__':
             # save the matrices 
             all_matrices[benchmark.name][obs]['A'] = experiment_results['estimator']._A
             all_matrices[benchmark.name][obs]['B'] = experiment_results['estimator']._B
-            all_matrices[benchmark.name][obs]['hyperparameters'] = experiment_results['hyperparameters']
-            all_matrices[benchmark.name][obs]['hyperparameter_values'] = experiment_results['hyperparameter_values']
-            all_matrices[benchmark.name][obs]['estimator'] = experiment_results['estimator']
-            all_matrices[benchmark.name][obs]['samp_period'] = param_dict['samp_period']
+            # all_matrices[benchmark.name][obs]['hyperparameters'] = experiment_results['hyperparameters']
             # all_matrices[benchmark.name][obs]['tuned_model'] = experiment_results['tuned_model']
 
             euc_norm = test_trajectories(benchmark, 10, param_dict["samp_period"])
