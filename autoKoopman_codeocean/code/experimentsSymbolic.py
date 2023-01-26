@@ -206,6 +206,7 @@ if __name__ == '__main__':
         store_data_heads(["", ""] + ["euc_norm", "time(s)", ""] * len(obs_types))
         save_filename = "../results/experimentsSymbolic_model_results.pickle"
         # save_filename = "../results/TESTS.pickle"
+        
 
     for benchmark in benches:
         result = [benchmark.name, ""]
