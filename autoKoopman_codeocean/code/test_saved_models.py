@@ -76,6 +76,22 @@ class loadedModels():
         print()
         return 
 
+    def check_benchmark(self, benchmark_name):
+        """
+        Checks the available observables for a benchmark
+        """
+        if benchmark_name not in self.benches_names: 
+            print(benchmark_name + " : NOT AVAILABLE: try benchmark")
+            self.check_availability()
+            print()
+            return 
+
+        print("Observables available for benchmark: ", benchmark_name)
+        print(list(self.saved_models_dict[benchmark_name].keys()))
+        print()
+        return 
+
+
     def check_state_space(self):
         """
         print the current state space for the set benchmark
