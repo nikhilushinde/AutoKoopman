@@ -96,7 +96,7 @@ class loadedModels():
             return False 
         return True
 
-    def set_benchmark_observable(self, benchmark_name, observable): 
+    def set(self, benchmark_name, observable): 
         """
         Sets which benchmark and observable to use from the loaded configurations
         """
