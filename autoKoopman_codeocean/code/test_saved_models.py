@@ -1,5 +1,22 @@
 import autokoopman
+from autokoopman import auto_koopman
 from symbolic import bio2, fhn, lalo20, prde20, robe21, spring, pendulum, trn_constants
+
+# from autokoopman.benchmark.bio2 import Bio2 as bio2
+# from autokoopman.benchmark.fhn import FitzHughNagumo as fhn
+# from autokoopman.benchmark.lalo20 import LaubLoomis as lalo20
+# from autokoopman.benchmark.prde20 import ProdDestr as prde20
+# from autokoopman.benchmark.robe21 import RobBench as robe21
+# from autokoopman.benchmark.spring import Spring as spring
+# from autokoopman.benchmark.pendulum import PendulumWithInput as pendulum
+
+# import autokoopman.benchmark.bio2 as bio2
+# import autokoopman.benchmark.fhn  as fhn
+# import autokoopman.benchmark.lalo20  as lalo20
+# import autokoopman.benchmark.prde20  as prde20
+# import autokoopman.benchmark.robe21  as robe21
+# import autokoopman.benchmark.spring  as spring
+# import autokoopman.benchmark.pendulum  as pendulum
 
 import numpy as np 
 import pickle 
@@ -9,8 +26,6 @@ import sys
 sys.path.append(".")
 
 filename = "/Users/nikhilushinde/Documents/Grad/research/arclab/AutoKoopman/autoKoopman_codeocean/results/TESTS.pickle"
-
-
 
 class loadedModels(): 
     """
@@ -61,7 +76,7 @@ class loadedModels():
         print()
         return 
 
-    def check_current_state_space(self):
+    def check_state_space(self):
         """
         print the current state space for the set benchmark
         """
@@ -127,23 +142,50 @@ class loadedModels():
         estimator = self.curr_dict["estimator"]
         return estimator.obs.obs_fcn(data)
 
-    def generate_gt_traj(self, initial_condition, time_span): 
+    def generate_gt_traj(self, initial_condition, time_span=None, inputs=None, time_eval=None): 
         """
         Generate ground truth data with the benchmark that you have set
         args: 
             - initial_condition: the initial state 
-            - time_span: [start time, end time]
+            - time_span: optional: 
+                - None: controlled system 
+                - list: for autonomous system [start time, end time]
+            - inputs: optional
+                - None: autonomous system 
+                - numpy array: the inputs to apply to the system at each timestep
+            - time_eval: optional:
+                - None: autonomous system 
+                - numpy array: numpy array containing all the time points that you want to evaluate at
+                - NOTE: must be the same length as the inputs
         returns; 
             - data: numpy array of the trajectory 
         """
         if not self.is_setup(): 
             return None
+        
+        if (time_span is None and inputs is None and time_eval is None) or ((time_span is not None and inputs is not None and time_eval is not None)): 
+            print("WARNING: Need to specify timespan for autonomous systems OR inputs and time_eval for controlled systems")
+            return None 
 
-        traj = self.curr_benchmark_obj.solve_ivp(
-            initial_state=initial_condition, 
-            tspan=time_span, 
-            sampling_period=self.curr_dict["samp_period"]
-        )
+        if inputs is None:     
+            # autonomous system     
+            traj = self.curr_benchmark_obj.solve_ivp(
+                initial_state=initial_condition, 
+                tspan=time_span, 
+                sampling_period=self.curr_dict["samp_period"]
+            )
+        else: 
+            if len(inputs) != len(time_eval): 
+                print("WARNING: need same number of inputs as time_eval points")
+                return None
+
+            # controlled system
+            traj = self.curr_benchmark_obj.solve_ivp(
+                initial_state=initial_condition, 
+                sampling_period=self.curr_dict["samp_period"],
+                inputs=inputs,
+                teval=time_eval, 
+            )
         return traj
 
 if __name__ == "__main__": 
