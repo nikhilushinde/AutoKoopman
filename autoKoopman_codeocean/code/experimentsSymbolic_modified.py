@@ -176,6 +176,15 @@ def test_trajectories(bench, num_tests, samp_period):
     for j in range(num_tests):
         iv = get_init_states(bench, 1, j + 10000)[0]
         trajectory, true_trajectory = get_trajectories(bench, iv, samp_period)
+
+        # plot function
+        # if j  <= 2: 
+        #     ytrue_plot = true_trajectory.states
+        #     ypred_plot = trajectory.states
+        #     plt.plot(ytrue_plot[:, 0], ytrue_plot[:, 1], "red")
+        #     plt.plot(ypred_plot[:, 0], ypred_plot[:, 1], "blue")
+        #     plt.show(block=True)
+
         y_true = np.matrix.flatten(true_trajectory.states)
         y_pred = np.matrix.flatten(trajectory.states)
         euc_norm = norm(y_true - y_pred) / norm(y_true)
@@ -238,20 +247,37 @@ def plot_trajectory(bench, var_1=0, var_2=-1, seed=100):
     trajectory, true_trajectory = get_trajectories(bench, iv, param_dict["samp_period"])
     plot(trajectory, true_trajectory, var_1, var_2)
 
+def test_plot(model): 
+    test_inp = np.ones(200)
+    test_inp[:10] = 0.1
+    test_inp[10:] = 0 
+
+    teval = np.arange(200) * 0.1
+
+    trajectory = model.solve_ivp([0, 0], inputs=test_inp, teval=teval)
+    states = trajectory.states
+
+    plt.plot(states[:, 0], states[:, 1])
+    plt.show(block=True)
+
 
 if __name__ == '__main__':
     all_matrices = {}
 
     save = True
 
-    benches = [pendulum.PendulumWithInput(beta=0.05), pendulum_withD_oncontrol.PendulumWithInputAndDisturbcontrol(beta=0.05), pendulum_withD_onfullstate.PendulumWithInputAndDisturbcontrol(beta=0.05)]#[pendulum.PendulumWithInput(beta=0.05), spring.Spring(), fhn.FitzHughNagumo(), robe21.RobBench(), prde20.ProdDestr(), lalo20.LaubLoomis(), bio2.Bio2(), trn_constants.TRNConstants()]
+    benches = []
+    # benches.extend([pendulum_withD_oncontrol.PendulumWithInputAndDisturbcontrol(beta=0.05), pendulum_withD_onfullstate.PendulumWithInputAndDisturbcontrol(beta=0.05)])
+    benches.extend([pendulum.PendulumWithInput(beta=0.05), spring.Spring(), fhn.FitzHughNagumo(), robe21.RobBench(), prde20.ProdDestr(), lalo20.LaubLoomis(), bio2.Bio2(), trn_constants.TRNConstants()])
+    # benches = [pendulum.PendulumWithInput(beta=0.05), pendulum_withD_oncontrol.PendulumWithInputAndDisturbcontrol(beta=0.05), pendulum_withD_onfullstate.PendulumWithInputAndDisturbcontrol(beta=0.05)]#[pendulum.PendulumWithInput(beta=0.05), spring.Spring(), fhn.FitzHughNagumo(), robe21.RobBench(), prde20.ProdDestr(), lalo20.LaubLoomis(), bio2.Bio2(), trn_constants.TRNConstants()]
     # benches = [pendulum_withD_oncontrol.PendulumWithInputAndDisturbcontrol(beta=0.05), pendulum_withD_onfullstate.PendulumWithInputAndDisturbcontrol(beta=0.05)]#[pendulum.PendulumWithInput(beta=0.05), spring.Spring(), fhn.FitzHughNagumo(), robe21.RobBench(), prde20.ProdDestr(), lalo20.LaubLoomis(), bio2.Bio2(), trn_constants.TRNConstants()]
     # benches = [pendulum_withD_onfullstate.PendulumWithInputAndDisturbcontrol(beta=0.05)]
     obs_types = ['id', 'poly', 'rff']#['id', 'poly', 'rff', 'deep']
     if save: 
         store_data_heads(["", ""] + ["euc_norm", "time(s)", ""] * len(obs_types))
-        save_filename = "../results/experimentsSymbolic_modified_model_results.pickle"
-        # save_filename = "../results/TESTS.pickle"
+        # save_filename = "../results/experimentsSymbolic_modified_model_results_withD.pickle"
+        save_filename = "../results/TESTS.pickle"
+        print("Going to save: ", save_filename)
         
     print("\n\n\nStarting experiments: \n\n\n")
     for benchmark in benches:
@@ -318,8 +344,10 @@ if __name__ == '__main__':
 
             if save:
                 # save results until now
+                print("Saving! ", save_filename)
                 with open(save_filename, 'wb') as handle:
                     pickle.dump(all_matrices, handle)
 
         if save: 
             store_data(result)
+
