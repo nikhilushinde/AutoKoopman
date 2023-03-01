@@ -1,6 +1,6 @@
 import autokoopman
 from autokoopman import auto_koopman
-from symbolic import bio2, fhn, lalo20, prde20, robe21, spring, pendulum, trn_constants
+from symbolic import bio2, fhn, lalo20, prde20, robe21, spring, pendulum, trn_constants, pendulum_withD_oncontrol, pendulum_withD_onfullstate
 
 # from autokoopman.benchmark.bio2 import Bio2 as bio2
 # from autokoopman.benchmark.fhn import FitzHughNagumo as fhn
@@ -25,7 +25,7 @@ import pdb
 import sys
 sys.path.append(".")
 
-filename = "/Users/nikhilushinde/Documents/Grad/research/arclab/AutoKoopman/autoKoopman_codeocean/results/TESTS.pickle"
+filename = "/Users/nikhilushinde/Documents/Grad/research/arclab/AutoKoopman/test_saved_models/experimentsSymbolic_modified_model_results_withD.pickle"
 
 class loadedModels(): 
     """
@@ -58,6 +58,8 @@ class loadedModels():
 
         # NOTE: make sure these base models are setup the same way during data generation
         self.benches = [pendulum.PendulumWithInput(beta=0.05), spring.Spring(), fhn.FitzHughNagumo(), robe21.RobBench(), prde20.ProdDestr(), lalo20.LaubLoomis(), bio2.Bio2(), trn_constants.TRNConstants()]
+        self.benches.extend([pendulum_withD_oncontrol.PendulumWithInputAndDisturbcontrol(beta=0.05), pendulum_withD_onfullstate.PendulumWithInputAndDisturbcontrol(beta=0.05)])
+
         self.benches_names = [bench.name for bench in self.benches]
 
         self.benchmark_name = None
