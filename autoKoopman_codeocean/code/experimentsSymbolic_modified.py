@@ -9,7 +9,7 @@ from autokoopman import auto_koopman
 
 # for a complete example, let's create an example dataset using an included benchmark system
 from symbolic import bio2, fhn, lalo20, prde20, robe21, spring, pendulum, trn_constants, pendulum_withD_oncontrol, pendulum_withD_onfullstate, \
-    inverted_pendulum_withD_oncontrol, inverted_pendulum_withD_onfullstate
+    inverted_pendulum_withD_oncontrol, inverted_pendulum_withD_onfullstate, vdp_py, duff_py
 from auxiliary.glop import Glop
 import random
 import copy
@@ -178,7 +178,7 @@ def test_trajectories(bench, num_tests, samp_period):
         iv = get_init_states(bench, 1, j + 10000)[0]
         trajectory, true_trajectory = get_trajectories(bench, iv, samp_period)
 
-        # # plot function
+        # plot function
         # if j  <= 10: 
         #     ytrue_plot = true_trajectory.states
         #     ypred_plot = trajectory.states
@@ -270,12 +270,14 @@ if __name__ == '__main__':
     inverted_pendulum_samp_period = 0.1
 
     benches = []
-    # benches.extend([pendulum_withD_oncontrol.PendulumWithInputAndDisturbcontrol(g=-9.81, beta=0.05), pendulum_withD_onfullstate.PendulumWithInputAndDisturbcontrol(g=-9.81, beta=0.05)])
-    benches.extend([inverted_pendulum_withD_oncontrol.InvertedPendulumWithInputAndDisturbcontrol(beta=-0.05, samp_period=inverted_pendulum_samp_period), 
-                    inverted_pendulum_withD_onfullstate.InvertedPendulumWithInputAndDisturbcontrol(beta=-0.05, samp_period=inverted_pendulum_samp_period)])
+    # our models 
+    # benches.extend([inverted_pendulum_withD_oncontrol.InvertedPendulumWithInputAndDisturbcontrol(beta=-0.05, samp_period=inverted_pendulum_samp_period), 
+                    # inverted_pendulum_withD_onfullstate.InvertedPendulumWithInputAndDisturbcontrol(beta=-0.05, samp_period=inverted_pendulum_samp_period)])
     # benches.extend([pendulum_withD_oncontrol.PendulumWithInputAndDisturbcontrol(beta=0.05), pendulum_withD_onfullstate.PendulumWithInputAndDisturbcontrol(beta=0.05)])
     # benches.extend([pendulum.PendulumWithInput(beta=0.05), spring.Spring(), fhn.FitzHughNagumo(), robe21.RobBench(), prde20.ProdDestr(), lalo20.LaubLoomis(), bio2.Bio2(), trn_constants.TRNConstants()])
-    
+    benches.extend([duff_py.Duffing(), vdp_py.VanderPol()])
+
+    # their models
     # benches = [pendulum.PendulumWithInput(beta=0.05), pendulum_withD_oncontrol.PendulumWithInputAndDisturbcontrol(beta=0.05), pendulum_withD_onfullstate.PendulumWithInputAndDisturbcontrol(beta=0.05)]#[pendulum.PendulumWithInput(beta=0.05), spring.Spring(), fhn.FitzHughNagumo(), robe21.RobBench(), prde20.ProdDestr(), lalo20.LaubLoomis(), bio2.Bio2(), trn_constants.TRNConstants()]
     # benches = [pendulum_withD_oncontrol.PendulumWithInputAndDisturbcontrol(beta=0.05), pendulum_withD_onfullstate.PendulumWithInputAndDisturbcontrol(beta=0.05)]#[pendulum.PendulumWithInput(beta=0.05), spring.Spring(), fhn.FitzHughNagumo(), robe21.RobBench(), prde20.ProdDestr(), lalo20.LaubLoomis(), bio2.Bio2(), trn_constants.TRNConstants()]
     # benches = [pendulum_withD_onfullstate.PendulumWithInputAndDisturbcontrol(beta=0.05)]
@@ -285,7 +287,8 @@ if __name__ == '__main__':
         # save_filename = "../results/experimentsSymbolic_modified_model_results_withD.pickle"
         # save_filename = "../results/TESTS.pickle"
         # save_filename = "../results/experimentsSymbolic_inverted_pend_10timesteps_0p1samp_0p5init.pickle"
-        save_filename = "../results/experimentsSymbolic_inverted_pend_20timesteps_0p1samp_0p5init.pickle"
+        save_filename = "../results/experimentsSymbolic_vdp_duff.pickle"
+
         print("Going to save: ", save_filename)
         
     print("\n\n\nStarting experiments: \n\n\n")

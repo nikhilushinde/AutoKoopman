@@ -1,7 +1,7 @@
 import autokoopman
 from autokoopman import auto_koopman
 from symbolic import bio2, fhn, lalo20, prde20, robe21, spring, pendulum, trn_constants, pendulum_withD_oncontrol, pendulum_withD_onfullstate, \
-    inverted_pendulum_withD_oncontrol, inverted_pendulum_withD_onfullstate
+    inverted_pendulum_withD_oncontrol, inverted_pendulum_withD_onfullstate, vdp_py, duff_py
 
 # from autokoopman.benchmark.bio2 import Bio2 as bio2
 # from autokoopman.benchmark.fhn import FitzHughNagumo as fhn
@@ -63,7 +63,7 @@ class loadedModels():
         self.benches.extend([pendulum_withD_oncontrol.PendulumWithInputAndDisturbcontrol(beta=0.05), pendulum_withD_onfullstate.PendulumWithInputAndDisturbcontrol(beta=0.05)])
         self.benches.extend([inverted_pendulum_withD_oncontrol.InvertedPendulumWithInputAndDisturbcontrol(beta=-0.05, samp_period=inverted_pendulum_samp_period), 
                              inverted_pendulum_withD_onfullstate.InvertedPendulumWithInputAndDisturbcontrol(beta=-0.05, samp_period=inverted_pendulum_samp_period)])
-
+        self.benches.extend([vdp_py.VanderPol(), duff_py.Duffing()])
         self.benches_names = [bench.name for bench in self.benches]
 
         self.benchmark_name = None
