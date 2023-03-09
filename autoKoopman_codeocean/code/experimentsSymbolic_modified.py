@@ -8,7 +8,8 @@ sys.path.append("../../..")
 from autokoopman import auto_koopman
 
 # for a complete example, let's create an example dataset using an included benchmark system
-from symbolic import bio2, fhn, lalo20, prde20, robe21, spring, pendulum, trn_constants, pendulum_withD_oncontrol, pendulum_withD_onfullstate
+from symbolic import bio2, fhn, lalo20, prde20, robe21, spring, pendulum, trn_constants, pendulum_withD_oncontrol, pendulum_withD_onfullstate, \
+    inverted_pendulum_withD_oncontrol, inverted_pendulum_withD_onfullstate
 from auxiliary.glop import Glop
 import random
 import copy
@@ -177,8 +178,8 @@ def test_trajectories(bench, num_tests, samp_period):
         iv = get_init_states(bench, 1, j + 10000)[0]
         trajectory, true_trajectory = get_trajectories(bench, iv, samp_period)
 
-        # plot function
-        # if j  <= 2: 
+        # # plot function
+        # if j  <= 10: 
         #     ytrue_plot = true_trajectory.states
         #     ypred_plot = trajectory.states
         #     plt.plot(ytrue_plot[:, 0], ytrue_plot[:, 1], "red")
@@ -266,9 +267,15 @@ if __name__ == '__main__':
 
     save = True
 
+    inverted_pendulum_samp_period = 0.1
+
     benches = []
+    # benches.extend([pendulum_withD_oncontrol.PendulumWithInputAndDisturbcontrol(g=-9.81, beta=0.05), pendulum_withD_onfullstate.PendulumWithInputAndDisturbcontrol(g=-9.81, beta=0.05)])
+    benches.extend([inverted_pendulum_withD_oncontrol.InvertedPendulumWithInputAndDisturbcontrol(beta=-0.05, samp_period=inverted_pendulum_samp_period), 
+                    inverted_pendulum_withD_onfullstate.InvertedPendulumWithInputAndDisturbcontrol(beta=-0.05, samp_period=inverted_pendulum_samp_period)])
     # benches.extend([pendulum_withD_oncontrol.PendulumWithInputAndDisturbcontrol(beta=0.05), pendulum_withD_onfullstate.PendulumWithInputAndDisturbcontrol(beta=0.05)])
-    benches.extend([pendulum.PendulumWithInput(beta=0.05), spring.Spring(), fhn.FitzHughNagumo(), robe21.RobBench(), prde20.ProdDestr(), lalo20.LaubLoomis(), bio2.Bio2(), trn_constants.TRNConstants()])
+    # benches.extend([pendulum.PendulumWithInput(beta=0.05), spring.Spring(), fhn.FitzHughNagumo(), robe21.RobBench(), prde20.ProdDestr(), lalo20.LaubLoomis(), bio2.Bio2(), trn_constants.TRNConstants()])
+    
     # benches = [pendulum.PendulumWithInput(beta=0.05), pendulum_withD_oncontrol.PendulumWithInputAndDisturbcontrol(beta=0.05), pendulum_withD_onfullstate.PendulumWithInputAndDisturbcontrol(beta=0.05)]#[pendulum.PendulumWithInput(beta=0.05), spring.Spring(), fhn.FitzHughNagumo(), robe21.RobBench(), prde20.ProdDestr(), lalo20.LaubLoomis(), bio2.Bio2(), trn_constants.TRNConstants()]
     # benches = [pendulum_withD_oncontrol.PendulumWithInputAndDisturbcontrol(beta=0.05), pendulum_withD_onfullstate.PendulumWithInputAndDisturbcontrol(beta=0.05)]#[pendulum.PendulumWithInput(beta=0.05), spring.Spring(), fhn.FitzHughNagumo(), robe21.RobBench(), prde20.ProdDestr(), lalo20.LaubLoomis(), bio2.Bio2(), trn_constants.TRNConstants()]
     # benches = [pendulum_withD_onfullstate.PendulumWithInputAndDisturbcontrol(beta=0.05)]
@@ -276,7 +283,9 @@ if __name__ == '__main__':
     if save: 
         store_data_heads(["", ""] + ["euc_norm", "time(s)", ""] * len(obs_types))
         # save_filename = "../results/experimentsSymbolic_modified_model_results_withD.pickle"
-        save_filename = "../results/TESTS.pickle"
+        # save_filename = "../results/TESTS.pickle"
+        # save_filename = "../results/experimentsSymbolic_inverted_pend_10timesteps_0p1samp_0p5init.pickle"
+        save_filename = "../results/experimentsSymbolic_inverted_pend_20timesteps_0p1samp_0p5init.pickle"
         print("Going to save: ", save_filename)
         
     print("\n\n\nStarting experiments: \n\n\n")
@@ -298,6 +307,11 @@ if __name__ == '__main__':
                 opt = 'grid'
             param_dict = {"train_size": 10, "samp_period": 0.1, "obs_type": obs, "opt": opt, "n_obs": 200,
                           "grid_param_slices": 5, "n_splits": 5, "rank": (1, 200, 40), "verbose": False}
+
+            # have the inverted pendulum have a smaller samp_period 
+            if "inverted_pendulum" in benchmark.name: 
+                param_dict["samp_period"] = inverted_pendulum_samp_period
+
             # generate training data
             training_data = get_training_data(benchmark, param_dict)
             start = time.time()
